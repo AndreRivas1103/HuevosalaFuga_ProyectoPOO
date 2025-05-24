@@ -1,11 +1,18 @@
+import pygame
 from ..estados import EstadoJuego
+from config.configuracion import (
+    VELOCIDAD_MOVIMIENTO, FUERZA_SALTO, GRAVEDAD, 
+    ANCHO_PANTALLA, ALTO_PANTALLA, ANCHO_HUEVO, 
+    ALTO_HUEVO, TIEMPO_INVULNERABILIDAD, 
+    TIEMPO_INVULNERABILIDAD_POWERUP
+)
 
 class Huevo:
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.ancho = 30
-        self.alto = 40
+        self.ancho = ANCHO_HUEVO
+        self.alto = ALTO_HUEVO
         self.rect = pygame.Rect(x, y, self.ancho, self.alto)
         self.vel_x = 0
         self.vel_y = 0
@@ -28,17 +35,18 @@ class Huevo:
         if not self.invulnerable:
             self.grietas += 1
             self.invulnerable = True
-            self.tiempo_invulnerable = 60
+            self.tiempo_invulnerable = TIEMPO_INVULNERABILIDAD
 
     def aplicar_powerup(self, tipo_powerup):
         if tipo_powerup == "cascara":
             self.grietas = max(0, self.grietas - 1)
         elif tipo_powerup == "papel":
             self.invulnerable = True
-            self.tiempo_invulnerable = 180
-        elif tipo_powerup == "salto":
-            self.aterrizaje_suave = True
-            self.tiempo_aterrizaje_suave = 300
+            self.tiempo_invulnerable = TIEMPO_INVULNERABILIDAD_POWERUP
+        elif tipo_powerup == "turbo":
+            self.vel_x *= 1.5
+            self.invulnerable = True
+            self.tiempo_invulnerable = TIEMPO_INVULNERABILIDAD_POWERUP
 
     def actualizar(self, plataformas):
         if not self.en_suelo:
